@@ -19,13 +19,46 @@ final class FibonacciTests: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        XCTAssertEqual(generateFibonacciSequence(length: 0), [])
+
+        // Test case 2: length 1
+        XCTAssertEqual(generateFibonacciSequence(length: 1), [0])
+
+        // Test case 3: length 2
+        XCTAssertEqual(generateFibonacciSequence(length: 2), [0, 1])
+
+        // Test case 4: length 10
+        XCTAssertEqual(generateFibonacciSequence(length: 10), [0, 1, 1, 2, 3, 5, 8, 13, 21, 34])
+
+        // Test case 5: length 100
+        let expectedSequence: [UInt64] = [
+        0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
+        ]
+        XCTAssertEqual(generateFibonacciSequence(length: 12), expectedSequence)
+
+        XCTAssertEqual(generateFibonacciSequence(length: 1998).last, 12200160415121876738)
     }
 
+    func generateFibonacciSequence(length: Int) -> [UInt64] {
+        var sequence: [UInt64] = [0, 1]
+        if length == 0 {
+            return []
+        } else if length == 1 {
+            return [0]
+        } else if length == 2 {
+            return sequence
+        }
+        for i in 2..<length {
+            let value = sequence[i-1].addingReportingOverflow(sequence[i-2])
+            if !value.overflow {
+                sequence.append(sequence[i-1] + sequence[i-2])
+            } else {
+                return sequence
+            }
+        }
+        return sequence
+    }
+    
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {
